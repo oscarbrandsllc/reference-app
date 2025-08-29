@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleeper League Analysis Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="background-container">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+    </div>
+
+    <div id="custom-tooltip" class="chart-tooltip"></div>
+
+    <div class="content-wrapper">
+        <header class="app-header">
+            <h1 class="app-title">Dynasty League Dashboard</h1>
+            <div class="controls-container">
+                <input type="text" id="usernameInput" placeholder="Sleeper Username..." value="The_Oracle">
+                <div class="custom-select-wrapper">
+                    <select id="leagueSelect" disabled>
+                        <option>Enter Username...</option>
+                    </select>
+                </div>
+                <button id="fetchButton" class="control-button">Analyze</button>
+            </div>
+        </header>
+
+        <main id="content" class="container">
+            <div id="loading-overlay" class="visible">
+                <div class="spinner"></div>
+                <p id="loading-text">Loading KTC Data...</p>
+            </div>
+
+            <div id="welcome-screen" class="hidden">
+                <h2>Welcome to the Dynasty Dashboard</h2>
+                <p>Enter your Sleeper username to generate an advanced analysis of your league.</p>
+            </div>
+
+            <div id="dashboard-container" class="hidden">
+                <section id="league-overview-section" class="dashboard-section">
+                    <div id="team-tiers-container" class="glass-panel">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div id="charts-container" class="glass-panel">
+                        <div class="chart-wrapper">
+                            <h3 class="chart-title">Overall Team Value</h3>
+                            <canvas id="totalValueChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3 class="chart-title">Starter Value</h3>
+                            <canvas id="starterValueChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="team-dna-section" class="dashboard-section">
+                     <div class="section-header">
+                        <h2>Team DNA</h2>
+                    </div>
+                    <div id="team-dna-container">
+                        <!-- Populated by JS with radar charts and new metrics -->
+                    </div>
+                </section>
+
+                <section id="positional-analysis-section" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Positional Analysis</h2>
+                        <div class="toggle-switch">
+                            <span>Value</span>
+                            <label class="switch">
+                                <input type="checkbox" id="viewToggle">
+                                <span class="slider round"></span>
+                            </label>
+                            <span>Rank</span>
+                        </div>
+                    </div>
+                    <div id="positional-ranks-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
