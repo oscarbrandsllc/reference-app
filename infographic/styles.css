@@ -1,0 +1,116 @@
+:root {
+  --font-sans: 'Quicksand', sans-serif;
+  --color-bg: #0D0E1B;
+  --color-text: #EAEBF0;
+  --color-accent-primary: #766DFF;
+  --color-accent-secondary: #42C2FF;
+  --pos-qb: #FF3A75;
+  --pos-rb: #00EBC7;
+  --pos-wr: #58A7FF;
+  --pos-te: #B469FF;
+  --pos-pick: #cccccc;
+}
+
+body {
+  background: linear-gradient(135deg, #0d0e1b, #1a1d2e);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0 1rem 3rem 1rem;
+}
+
+header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+header h1 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.controls {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.controls input,
+.controls select,
+.controls button {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  font-family: var(--font-sans);
+}
+
+.controls select {
+  background: #1e1f30;
+  color: var(--color-text);
+}
+
+.controls button {
+  background: var(--color-accent-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.controls button:hover {
+  background: var(--color-accent-secondary);
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #1e1f30;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+#charts {
+  margin-top: 2rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+#slotTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+#slotTable th,
+#slotTable td {
+  border: 1px solid #333;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+#slotTable th {
+  background: #1e1f30;
+}
+
+.highlight {
+  background-color: rgba(118,109,255,0.3);
+}
+
+.rank { font-size: 0.75rem; opacity: 0.8; }
+.name { font-size: 0.8rem; display:block; }
+.value { font-weight: 600; }
+
+#slotTable td.pos-QB { border-top: 3px solid var(--pos-qb); }
+#slotTable td.pos-RB { border-top: 3px solid var(--pos-rb); }
+#slotTable td.pos-WR { border-top: 3px solid var(--pos-wr); }
+#slotTable td.pos-TE { border-top: 3px solid var(--pos-te); }
+
+.hidden { display: none; }
