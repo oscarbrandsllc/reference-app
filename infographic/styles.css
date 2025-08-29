@@ -1,0 +1,204 @@
+:root {
+  --font-sans: "Quicksand", sans-serif;
+  --color-bg: #0d0e1b;
+  --color-text: #eaebf0;
+  --color-accent-primary: #766dff;
+  --color-accent-secondary: #42c2ff;
+  --pos-qb: #ff3a75;
+  --pos-rb: #00ebc7;
+  --pos-wr: #58a7ff;
+  --pos-te: #b469ff;
+  --pos-pick: #cccccc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, #0d0e1b 0%, #1e1f30 100%);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0 1rem;
+}
+
+header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.controls {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.controls input,
+.controls select,
+.controls button {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  border: none;
+  font-family: var(--font-sans);
+}
+
+.controls input,
+.controls select {
+  background: #1e1f30;
+  color: var(--color-text);
+}
+
+.controls button {
+  background: var(--color-accent-primary);
+  color: var(--color-bg);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.controls button:hover {
+  background: var(--color-accent-secondary);
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#charts {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: #1e1f30;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  position: relative;
+}
+
+.chart-card:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  transform: translateY(-2px);
+}
+
+.chart-card canvas {
+  max-height: 400px;
+}
+
+.dl-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--color-accent-secondary);
+  border: none;
+  border-radius: 4px;
+  color: var(--color-bg);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dl-btn:hover {
+  background: var(--color-accent-primary);
+}
+
+#teamDetail {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+#teamDetail .chart-card {
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+#teamDetail canvas {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+#teamSummary {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+#slotTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+#slotTable th,
+#slotTable td {
+  border: 1px solid #333;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+#slotTable th {
+  background: #1e1f30;
+}
+
+#slotTable tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+#slotTable tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+#slotTable tbody tr.selected {
+  outline: 2px solid var(--color-accent-secondary);
+}
+
+.rank {
+  font-size: 0.75rem;
+  color: var(--color-accent-secondary);
+}
+
+.highlight {
+  background-color: rgba(118, 109, 255, 0.3);
+}
+
+.hidden {
+  display: none;
+}
+
+#loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid var(--color-accent-secondary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
