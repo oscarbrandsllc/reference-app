@@ -1,0 +1,1865 @@
+
+      /* --- THEME & FOUNDATION --- */
+      :root {
+        --font-sans: 'Product Sans', 'Google Sans', 'Quicksand', sans-serif;
+    
+        /* New Color Palette */
+        --color-bg: #0D0E1B;
+        --color-bg-light: #1E1F30;
+        --color-panel-bg: rgba(22, 24, 43, 0.1);
+        --color-panel-border: rgba(128, 138, 189, 0.2);
+        --color-panel-border-glow: rgba(128, 138, 189, 0.4);
+    
+        --color-text-primary: #EAEBF0;
+        --color-text-secondary: #9096C0;
+        --color-text-tertiary: #5F6795;
+    
+        --color-accent-primary: #766DFF;
+        --color-accent-primary-glow: rgba(118, 109, 255, 0.5);
+        --color-accent-secondary: #42C2FF;
+        --color-accent-secondary-glow: rgba(66, 194, 255, 0.5);
+        --color-accent-trade-win: #00F5A0;
+        --color-accent-trade-lose: #FF47A6;
+    
+        /* Position Colors */
+        --pos-qb: #FF3A75ca;
+        --pos-rb: #00EBC7ca;
+        --pos-wr: #58A7FFca;
+        --pos-te: #B469FFca;
+        --pos-flx: #ba6597ee;
+        --pos-sflx: #FF3A75ca;
+        --pos-bn: #64748b;
+        --pos-tx: #808ea3;
+    
+        /* Other vars */
+        --panel-border-radius: 12px;
+        --card-border-radius: 8px;
+        --glow-strength: 0.6; /* FIXED: give it a value so parsing continues */
+    
+        /* Orb 3 (shared) — using lengths so gradient center = orb center */
+        --orb3-left: 330px;
+        --orb3-top: 23rem;
+        --orb3-size: 19rem;
+      }
+    
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: #0b0b12;
+        color: var(--color-text-primary);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      main#content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    
+      /* --- Background Orbs and Noise Overlay --- */
+      #background-container {
+        position: fixed; /* EDITED: Changed from absolute to fixed */
+        inset: 0;
+        z-index: -10;
+        pointer-events: none;
+        overflow: hidden; 
+      }
+    
+      #background-gradient {
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(1200px 800px at -10% -20%, #7300FF59, transparent),
+          radial-gradient(700px 600px at 110% 10%, #00EBFF40, transparent),
+          /* Orb-3’s gradient center is computed from the orb’s box center */
+          radial-gradient(
+            300px 300px
+            at calc(var(--orb3-left) + (var(--orb3-size) / 2))
+               calc(var(--orb3-top)  + (var(--orb3-size) / 2)),
+            #FFAF0020, transparent
+          );
+      }
+    
+      .orb {
+        position: absolute;
+        border-radius: 9999px;
+        filter: blur(38px);
+      }
+    
+      #orb-1 {
+        left: -6rem; top: 2.5rem; height: 18rem; width: 18rem;
+        background: linear-gradient(135deg, rgba(115,0,255,0.6), rgba(0,235,255,0.4));
+        opacity: 0.35;
+      }
+    
+      #orb-2 {
+        right: -60px; top: 6rem; height: 16rem; width: 16rem;
+        background: linear-gradient(135deg, rgba(0,235,255,0.5), rgba(255,175,0,0.4));
+        opacity: 0.30;
+      }
+    
+      #orb-3 {
+        /* match the same vars used in the gradient center above */
+        left: var(--orb3-left);
+        top:  var(--orb3-top);
+        height: var(--orb3-size);
+        width:  var(--orb3-size);
+        /* No translate here; center handled via calc() in the gradient */
+        background: linear-gradient(135deg, #FFAF008C, #7300FF80);
+        opacity: 0.48;
+        border-radius: 9999px;
+        filter: blur(38px);
+        position: absolute;
+      }
+    
+      #noise-overlay {
+        position: fixed; /* EDITED: Changed from absolute to fixed */
+        inset: 0;
+        z-index: -9;
+        pointer-events: none;
+        opacity: 0.35;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3e%3cfilter id='n'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3e%3cfeColorMatrix type='saturate' values='0'/%3e%3cfeComponentTransfer%3e%3cfeFuncA type='table' tableValues='0 0 0 0 0.08'/%3e%3c/feComponentTransfer%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23n)'/%3e%3c/svg%3e");
+      }
+
+
+        /* --- SCROLLBARS --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-text-tertiary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-secondary);
+        }
+
+        /* --- GENERAL UI --- */
+        #loading, #welcome-screen { 
+            text-align: center; 
+            padding: 4rem 2rem; 
+            font-size: 1.2rem; 
+            color: var(--color-text-secondary); 
+            max-width: 600px;
+            margin: 1.2rem auto;
+        }
+
+        #welcome-screen, #loading {
+            background: var(--color-panel-bg);
+            border: 1px solid var(--color-panel-border);
+            border-radius: var(--panel-border-radius);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        #welcome-screen h2 { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: var(--color-text-primary); 
+            margin-bottom: 0.5rem; 
+        }
+
+        #header-container {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 0.1rem 0rem 0.25rem 0rem;
+            border-radius: var(--panel-border-radius);
+            /* EDITED: Changed background to be more transparent to see bg */
+            background: linear-gradient(180deg, rgba(11, 11, 18, 0.2) 10%, transparent 100%);
+        }
+
+        /* --- UTILITY CLASSES --- */
+        .glass-panel {
+       background-color: rgba(13, 14, 35, 0.21);
+       background-image: linear-gradient(rgba(255,255,255, 0.03), rgba(255,255,255, 0.03));
+        -webkit-backdrop-filter: blur(0px) saturate(120%) brightness(120%);
+        backdrop-filter: blur(6px) saturate(120%) brightness(120%);
+        box-shadow: inset 0 0 0 0px rgba(255,255,255, 0.05), inset 0 0 0 3px rgba(200,200,200, 0.025), 0 10px 26px rgba(0,0,0, var(--outerA, .22));
+        
+        /* Frame */
+        border: 1px solid rgba(128, 138, 189, 0.2);
+        border-radius: 10px;
+        box-shadow: rgba(255, 255, 255, 0.05) 0px 0px 0px 0px inset, rgba(200, 200, 200, 0.025) 0px 0px 0px 3px inset, rgba(0, 0, 0, 0.22) 0px 10px 26px 0px;
+        }
+        /* --- HEADER & CONTROLS (3-Row Redesign) --- */
+        .app-header {
+            padding: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .header-row {
+            display: flex;
+            flex-wrap: nowrap; /* Prevent wrapping */
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding-bottom: 2px; /* space for scrollbar */
+        }
+        .header-row:nth-child(2), .header-row:nth-child(3) {
+            border-top: 1px solid var(--color-panel-border);
+            padding-top: 0.25rem;
+        }
+
+        #contextual-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        #contextual-controls.hidden {
+            display: none;
+        }
+
+/* Ensure hidden truly hides views regardless of ID display rules */
+#playerListView.hidden, #rosterView.hidden { display: none !important; }
+
+
+        /* Row 1 */
+        .username-area {
+            flex-grow: 1;
+            min-width: 120px; /* prevent it from getting too small */
+            max-width: 150px;
+            padding: .3rem;
+        }
+        /* Replace existing #usernameInput block with this */
+#usernameInput {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1));
+  border: 1px solid var(--color-panel-border);
+  border-radius: 8px;
+
+  /* match the other glass controls */
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  backdrop-filter: blur(4px) saturate(110%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+
+  /* Preserve input behavior & spacing exactly as before */
+  color: #c4c8ea;
+  padding: 0.23rem 0.5rem;
+  font-size: 0.5rem;
+  font-weight: 300;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+#usernameInput::placeholder { 
+            color: #5F6795aa !important;
+}
+        
+/* Prevent browser autofill from turning the username bar white (Safari/Chrome) */
+#usernameInput:-webkit-autofill,
+#usernameInput:-webkit-autofill:hover,
+#usernameInput:-webkit-autofill:focus {
+  -webkit-text-fill-color: #c4c8ea !important;
+  caret-color: #c4c8ea !important;
+  /* Overwrite the default yellow/white fill with a transparent inset */
+  -webkit-box-shadow: 0 0 0px 1000px rgba(13,14,35,0) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(13,14,35,0) inset !important;
+  background-color: transparent !important;
+  border: 1px solid var(--color-panel-border) !important;
+  background-clip: padding-box !important;
+  transition: background-color 99999s ease-in-out 0s !important;
+}
+#usernameInput:focus {
+            outline: none;
+            border-color: var(--color-accent-primary);
+            box-shadow: 0 0 var(--glow-strength) var(--color-accent-primary-glow);
+        }
+
+        /* Row 2 */
+        .custom-select-wrapper {
+            position: relative;
+            flex-grow: 1;
+            min-width: 120px;
+            max-width: 150px;
+        }
+        #leagueSelect {
+            appearance: none;
+             /* EDITED: Increased transparency */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1));
+            border: 1px solid var(--color-panel-border);
+            border-radius: 8px;
+            -webkit-backdrop-filter: blur(4px) saturate(110%);
+            backdrop-filter: blur(4px) saturate(110%);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);           
+            padding: 0.45rem 1.5rem 0.45rem 0.5rem;
+            font-size: 0.7rem;
+            color: #c4c8ea;
+            width: 100%;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #leagueSelect:focus,
+#leagueSelect:focus-visible,
+.custom-select-wrapper:focus-within #leagueSelect {
+  outline: none !important;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05) !important; /* preserve glass inset */
+  border-color: var(--color-panel-border) !important;
+}
+        .custom-select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            top: 50%;
+            right: 0.5rem;
+            transform: translateY(-50%) scale(0.6);
+            color: var(--color-text-secondary);
+            pointer-events: none;
+        }
+
+        /* Row 3 */
+        .compare-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        #positional-filters {
+            /* This will no longer grow, allowing the parent to center it */
+            justify-content: center;
+        }
+
+        /* High-End Glass Buttons & Segmented Controls v3 */
+        .primary-switcher, .secondary-switcher, #positional-filters {
+            display: flex;
+            border: 1px solid var(--color-panel-border);
+            border-radius: 8px;
+            padding: 0.14rem;
+            gap: 0.15rem;
+            flex-shrink: 0;
+       }
+		.primary-switcher {           
+            background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1));
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+		.secondary-switcher {           
+            background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1));
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+		#positional-filters {           
+            background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1));
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+
+
+
+        /* --- Base Button Styles --- */
+        .primary-switcher button, .secondary-switcher button, .filter-btn {
+            padding: 0.15rem 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 400;
+            border: 1px solid transparent;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            color: var(--color-text-secondary);
+            text-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+        /* Primary buttons are bolder */
+        .primary-switcher button {
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        /* --- Hover States --- */
+        .primary-switcher button:hover, .secondary-switcher button:hover, .filter-btn:hover {
+            color: var(--color-text-primary);
+            background: var(--color-panel-bg);
+        }
+
+        /* --- Active & Counterpart States (EDITED) --- */
+
+        #fetchRostersButton.active {
+            color: #c4c8ea;
+            border-color: var(--color-accent-secondary); /* Blue */
+            box-shadow: 0 0 8px var(--color-accent-secondary-glow);
+        }
+
+        #fetchOwnershipButton.active {
+            color: #c4c8ea;
+            border-color: #D90059; /* Pink */
+            box-shadow: 0 0 8px #D90059;
+        }
+
+        #positionalViewBtn.active {
+            color: #c4c8ea;
+            border-color: var(--color-accent-primary); /* Purple */
+            box-shadow: 0 0 8px var(--color-accent-primary-glow);
+        }
+
+        #depthChartViewBtn.active {
+            color: #c4c8ea;
+            border-color: var(--color-accent-trade-win); /* Green */
+            box-shadow: 0 0 8px rgba(0, 245, 160, 0.5);
+        }
+
+        /* Counterpart buttons are dimmed */
+        .primary-switcher button.counterpart-active, .secondary-switcher button.counterpart-active {
+            color: var(--color-text-tertiary);
+            background: transparent;
+        }
+        .primary-switcher button.counterpart-active:hover, .secondary-switcher button.counterpart-active:hover {
+            color: var(--color-text-secondary);
+        }
+
+
+        /* Filter Buttons */
+        .filter-btn.active[data-position="QB"] { background-color: var(--pos-qb); color: #1a1c26; }
+        .filter-btn.active[data-position="RB"] { background-color: var(--pos-rb); color: #1a1c26; }
+        .filter-btn.active[data-position="WR"] { background-color: var(--pos-wr); color: #1a1c26; }
+        .filter-btn.active[data-position="TE"] { background-color: var(--pos-te); color: #1a1c26; }
+        .filter-btn.active[data-position="FLX"] { background-color: var(--pos-flx); color: #1a1c26; }
+
+        /* Compare Button */
+        .control-button {
+            padding: 0.29rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--color-panel-border);
+            /* EDITED: Increased transparency */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1))!important;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            color: var(--color-text-secondary);
+        }
+        .control-button.glow-on-select {
+            box-shadow: 0 0 8px #7300ff;
+            color: #eeeeee;
+            border: 1px solid #4E00DA;
+        }
+        .control-button.active {
+            color: #ffffff;
+            border: 1px solid #a300ff;
+            background: #7300ff39;
+            box-shadow: 0 0 10px #7300ff;
+        }
+        .control-button:disabled {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1))!important;
+            box-shadow: inset 0 1px 2px rgba(200,200,200,0.08) !important;
+            color: var(--color-text-tertiary) !important;
+            cursor: not-allowed;
+            border-color: var(--color-panel-border) !important;
+        }
+        .control-button-subtle {
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            text-decoration: underline;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        /* --- ROSTER VIEW --- */
+        #rosterContainer { 
+            width: 100%; 
+            overflow-x: auto; 
+            padding: 0.25rem;
+        }
+        #rosterGrid { 
+            display: flex; 
+            flex-direction: row; 
+            flex-wrap: nowrap; 
+            gap: 0.5rem; 
+            min-width: min-content; 
+            padding-bottom: 1rem; /* For scrollbar clearance */
+
+        }
+        #rosterGrid.is-preview-mode {
+            justify-content: center;
+        }
+        .roster-column { 
+            width: 135px; 
+            flex-shrink: 0; 
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+		
+       .team-header-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #d0d1ee;
+  text-align: center;
+  padding: 0.5rem;
+  cursor: pointer;
+
+  /* Glass look to match filter groups */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.1));
+  border: 1px solid var(--color-panel-border);
+  border-radius: 8px;
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  backdrop-filter: blur(4px) saturate(110%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+}
+        .team-header-item:hover {
+            box-shadow: 0 0 5px #7300ff;
+            
+        }
+		.team-header-item:has(.team-compare-checkbox.selected) {
+          border: 1px solid #6300ffaa;
+		}
+        .team-card { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.25rem;
+        }
+
+        .roster-section h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 0.2rem;
+  color: var(--color-text-primary);
+  text-align: center;
+  padding: 0.0rem 0;
+
+  position: relative;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 5px;
+  -webkit-backdrop-filter: saturate(114%) blur(1px);
+  backdrop-filter: saturate(114%) blur(1px);
+  overflow: hidden;
+}
+
+.roster-section h3::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background-color: rgba(20, 28, 58, 0.15);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 35%);
+}
+        
+         .qb-section h3 { 
+            color: var(--pos-qb);
+            border: solid 1px #FF3A7599; }
+         .rb-section h3 { 
+            color: var(--pos-rb); 
+            border: solid 1px #00EBC799; }
+          .wr-section h3 { 
+            color: var(--pos-wr);
+            border: solid 1px #58A7FF99; }
+         .te-section h3 { 
+            color: var(--pos-te); 
+            border: solid 1px #B469FF99; }
+
+    /* --- Player & Pick Card Styles --- */
+        .player-row, .pick-row {
+            background: var(--color-panel-bg);
+            border: 1px solid var(--color-panel-border);
+            border-radius: var(--card-border-radius);
+            padding: 0.2rem;
+            margin-top: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .is-trade-mode .player-row, .is-trade-mode .pick-row { 
+            cursor: pointer; 
+        }
+        .is-trade-mode .player-row:hover, .is-trade-mode .pick-row:hover {
+            border-color: var(--color-panel-border-glow);
+            transform: translateY(-2px);
+        }
+        
+        .player-selected {
+            border-color: var(--color-accent-primary) !important;
+            box-shadow: 0 0 var(--glow-strength) var(--color-accent-primary-glow);
+        }
+
+        .player-main-line {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .player-name { 
+            font-weight: 400; 
+            font-size: 0.8rem; 
+            color: #d0d1ee;
+            line-height: 1.2;
+        }
+        .player-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 5px;
+            color: var(--color-bg);
+            line-height: 1;
+        }
+
+        .player-meta-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.1rem 0.1rem;
+            gap: 0.0rem;
+            font-size: 0.65rem;
+            color: var(--color-text-secondary);
+        }
+        .team-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 4px;
+            border-radius: 4px;
+            line-height: 1;
+        }
+
+        .player-value-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            color: var(--color-text-secondary);
+            background: #1d223faa;
+            border-radius: 6px;
+            padding: 0.0rem 0.1rem;
+        }
+        .player-value-line .value {
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: var(--color-text-primary);
+        }
+
+        .pick-row {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pick-label {
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .pick-ktc {
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+        }
+        .pick-ktc .value {
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .team-compare-checkbox {
+            appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--color-text-tertiary);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0;
+        }
+        .team-compare-checkbox.selected {
+            border-color: var(--color-accent-primary);
+            background-color: var(--color-accent-primary);
+            box-shadow: 0 0 var(--glow-strength) var(--color-accent-primary-glow);
+        }
+        .team-compare-checkbox.selected::after {
+            content: '✔';
+            position: absolute;
+            color: var(--color-bg);
+            font-size: 0.7rem;
+            font-weight: 900;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+		
+		
+        /* --- TRADE SIMULATOR --- */
+        #tradeSimulator {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            z-index: 20;
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .trade-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .trade-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 0.5rem; 
+        }
+        .trade-header h3 { 
+            font-size: 1rem; 
+            font-weight: 700; 
+            color: var(--color-text-primary); 
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        #clearTradeButton { 
+            background: var(--color-bg-light); 
+            color: var(--color-text-secondary); 
+            font-size: 0.8rem; 
+            padding: 4px 10px; 
+            border-radius: 6px;
+            border: 1px solid var(--color-panel-border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #clearTradeButton:hover {
+            color: var(--color-text-primary);
+            border-color: var(--color-panel-border-glow);
+        }
+
+        .trade-body { 
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .trade-divider {
+            width: 2px;
+            height: 80%;
+            background-image: linear-gradient(to bottom, transparent, var(--color-accent-secondary), transparent);
+            opacity: 0.7;
+        }
+
+        .trade-team-column { 
+            display: flex; 
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .trade-team-column h4 { 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            margin-bottom: 0.25rem; 
+            text-align: center;
+            color: var(--color-text-secondary);
+        }
+
+        .trade-assets { 
+            min-height: 50px; 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 5px; 
+            align-content: flex-start; 
+            flex-grow: 1; 
+            background: var(--color-bg-light);
+            border-radius: var(--panel-border-radius);
+            padding: 0.5rem;
+        }
+        .trade-asset-chip { 
+            background: var(--color-panel-bg); 
+            border: 1px solid var(--color-panel-border);
+            font-size: 0.75rem; 
+            padding: 3px 7px; 
+            border-radius: 6px; 
+            display: flex; 
+            gap: 5px; 
+            align-items: center;
+            color: var(--color-text-secondary);
+        }
+        .trade-asset-chip .ktc { 
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+
+        .trade-total { 
+            margin-top: 0.25rem; 
+            text-align: center; 
+            font-size: 1rem; 
+            font-weight: 700; 
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .trade-total.winning {
+            box-shadow: 0 0 12px var(--color-accent-trade-win);
+            color: var(--color-accent-trade-win);
+        }
+        .trade-total.losing {
+            box-shadow: 0 0 12px var(--color-accent-trade-lose);
+            color: var(--color-accent-trade-lose);
+        }
+        .trade-total.even {
+            color: var(--color-accent-secondary);
+        }
+
+        /* --- OWNERSHIP (PLAYER LIST) VIEW --- */
+        #playerListView { 
+            max-width: 700px; 
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%; 
+        }
+        #playerSearch {
+            background: var(--color-panel-bg);
+            border: 1px solid var(--color-panel-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--color-text-primary);
+            padding: 0.50rem 0.75rem;
+            border-radius: var(--panel-border-radius);
+            font-size: 0.8rem;
+            width: 100%;
+            margin: 0.5rem auto;
+            display: block;
+            transition: all 0.2s ease;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            flex-shrink: 0;
+        }
+        #playerSearch:focus {
+            outline: none;
+            border-color: var(--color-accent-primary);
+            box-shadow: 0 0 var(--glow-strength) var(--color-accent-primary-glow);
+        }
+        #playerSearch::placeholder { 
+            color: var(--color-text-secondary); 
+        }
+
+        .player-list-section { 
+            border-radius: 6px; 
+            overflow-y: auto;
+            flex: 1;
+            padding: 0rem 1rem;
+        }
+
+        .pl-player-row { 
+            display: flex; 
+            align-items: center; 
+            padding: 0.25rem 0.55rem; 
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+/* ODD = inset */
+.player-list-section .pl-player-row:nth-child(odd) {
+      position: relative;
+      background-color: rgba(100, 100, 120, 0.03);
+      backdrop-filter: blur(2px) saturate(1.30) brightness(1.46);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.22) 0px 10px 26px 0px;
+    }
+
+.player-list-section .pl-player-row:nth-child(odd)::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      opacity: 0.06;
+      background-color: rgba(13, 14, 35, 0.03);
+      background: repeating-linear-gradient(20deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5) 1px, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) 4px);
+}
+/*  EVEN */
+.player-list-section .pl-player-row:nth-child(even) {
+      position: relative; overflow: hidden;
+     background-color: rgba(13, 14, 35, 0.03);
+    backdrop-filter: blur(2px) saturate(1.25) brightness(1.46);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.59) 0px 10px 60px 0px;
+}
+.player-list-section .pl-player-row:nth-child(even)::after {
+     content:""; 
+    position:absolute; inset:0; 
+    pointer-events:none; 
+    border-radius:inherit; 
+    background-color: rgba(13, 14, 35, 0.03);
+    background-image:radial-gradient(rgba(255, 255, 255, 0.03) 1px, rgba(0, 0, 0, 0) 1px); 
+    background-size: 5px 5px; 
+    }
+
+
+
+        .pl-player-info { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1; 
+            min-width: 0;
+        }
+        .pl-player-name { 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            color: var(--color-text-primary); 
+            display: flex; 
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pl-player-details { 
+            font-size: 0.8rem; 
+            color: var(--color-text-secondary); 
+            font-weight: 500; 
+            margin-top: 2px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .pl-list-tag { 
+            min-width: 24px; /* EDITED */
+            height: 22px; 
+            line-height: 22px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            text-align: center; 
+            border-radius: 5px; 
+            color: var(--color-bg); 
+            flex-shrink: 0;
+            margin-right: 0.3rem; /* EDITED */
+        }
+
+        .pl-list-tag-spacer {
+            width: 24px; /* EDITED */
+            height: 1px;
+            flex-shrink: 0;
+            margin-right: 0.3rem; /* EDITED */
+        }
+
+        .pl-right-meta {
+            display: grid;
+            grid-template-columns: 35px 45px 1fr;
+            column-gap: 1rem;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            flex-shrink: 0;
+            width: 170px; /* EDITED */
+            text-align: right;
+        }
+        .pl-col-count, .pl-col-pct { 
+            text-align: center; 
+            font-variant-numeric: tabular-nums;
+        }
+      /* "LEAGUES" text in the ownership page header  */
+        .pl-col-lgs {
+            text-align: left;
+            white-space: normal;
+            font-size: 0.65rem; /* EDITED */
+            font-weight: 500;
+            color: #cdd1ee;
+        }
+    /* ownership page header  */
+    .pl-list-header {
+            background: #1d1f3577 !important; 
+            border: 1px solid rgba(255, 255, 255, 0.08) !important; 
+             border-radius: 10px; 
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            color: var(--color-text-primary); 
+            text-transform: uppercase; 
+            letter-spacing: .8px; 
+            font-weight: 700; 
+            font-size: 0.7rem;
+            position: sticky;
+            top: 0;
+            z-index: 4;
+            margin: 2px 1px 5px 1px;
+            padding: 0.5rem 0.1rem !important;
+        }
+        .pl-list-header::after {
+            background: #1d1f35aa !important; 
+             border-radius: 4px; 
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            position: sticky;
+            top: 0;
+            z-index: 4;
+
+        }
+        /* "PLAYERS & INFO" text in the ownership page header  */
+        .pl-list-header .pl-player-name {
+            font-size: 0.75rem;
+            color: #cdd1ee;
+        }
+        .pl-list-header .pl-player-info {
+            justify-content: center; /* center header text vertically */
+        }
+        /* "#" and "%" Headers text in ownership page  */
+        .pl-list-header .pl-right-meta {
+            font-size: 0.85rem;
+            color: #cdd1ee;
+        }
+
+        .pl-list-header .pl-col-lgs {
+            font-size: 0.65rem;
+            color: #cdd1ee;
+        }
+
+        
+        .pl-list-header .pl-player-details { display: none; }
+
+        .pl-count-high, .pl-pct-high { color: var(--color-accent-trade-win); }
+        .pl-count-mid, .pl-pct-mid { color: var(--color-accent-secondary); }
+        .pl-count-low, .pl-pct-low { color: var(--color-text-secondary); }
+
+        /* --- Responsive Header Layout --- */
+
+        @media (min-width: 820px) {
+            .app-header {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            #contextual-controls {
+                display: contents;
+            }
+
+            .header-row {
+                width: auto;
+                border-top: none !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
+            .header-row:has(#positional-filters) {
+                flex-basis: 100%;
+                justify-content: center;
+                margin-top: 0.25rem;
+            }
+
+            .header-row:has(.compare-controls) {
+                /* This will make the row containing filters and compare buttons take only the space it needs */
+                width: auto;
+                flex-grow: 0;
+            }
+
+            #positional-filters {
+                flex-grow: 0; /* Prevents the filter group from expanding */
+            }
+
+            .username-area, .custom-select-wrapper {
+                flex-grow: 0;
+                max-width: 220px;
+            }
+        }
+
+    
+/* ===== Ownership page: mobile corrections (v4 — rows vs header separated) ===== */
+@media (max-width: 540px) {
+  /* Container padding so content breathes */
+  #playerListView { padding: 0 6px; }
+
+  /* ——— BODY ROWS ONLY ——— */
+  .player-list-section .pl-player-row {
+    padding: 6px 3px !important;
+    gap: 4px !important;
+    font-size: 0.72rem !important;
+    /* --- FIX --- This was set to flex-start, causing the misalignment. Changed to center. */
+    align-items: center !important; 
+  }
+
+  .player-list-section .pl-player-row .pl-player-name {
+    font-size: 0.78rem !important;
+    line-height: 1.2 !important;
+    gap: 6px !important;
+  }
+
+  /* Inline bits inside the name line (e.g., Age) */
+  .player-list-section .pl-player-row .pl-player-name span,
+  .player-list-section .pl-player-row .pl-player-name .player-age {
+    font-size: 0.6rem !important;
+  }
+
+  /* Team badge in rows */
+  .player-list-section .pl-player-row .team-tag {
+    font-size: 0.6rem !important;
+    padding: 1px 6px !important;
+  }
+
+  /* Secondary details line (ADP, SFLX, RY) */
+  .player-list-section .pl-player-row .pl-player-details {
+    font-size: 0.60rem !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+  }
+
+  /* Right meta columns (count | % | leagues) for rows */
+  .player-list-section .pl-player-row .pl-right-meta {
+    width: 160px !important;
+    grid-template-columns: 22px 34px 1fr !important;
+    column-gap: 6px !important;
+    font-size: 0.68rem !important;
+  }
+  .player-list-section .pl-player-row .pl-col-count,
+  .player-list-section .pl-player-row .pl-col-pct {
+    text-align: center !important;
+  }
+  .player-list-section .pl-player-row .pl-col-lgs {
+    font-size: 0.68rem !important;
+    white-space: normal !important;
+    text-align: left !important;
+    line-height: 1.15 !important;
+    word-break: break-word !important;
+  }
+
+  /* Position tag chip in rows */
+  .player-list-section .pl-player-row .pl-list-tag {
+    min-width: 22px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    font-size: 0.68rem !important;
+    margin-right: 4px !important;
+  }
+  .player-list-section .pl-player-row .pl-list-tag-spacer {
+    width: 26px !important;
+    margin-right: 6px !important;
+  }
+
+  /* Guard “Age:” and similar tiny bits inside rows */
+  .player-list-section .pl-player-row .player-meta-line,
+  .player-list-section .pl-player-row .player-meta-line .player-age,
+  .player-list-section .pl-player-row .player-meta-line span {
+    font-size: 0.68rem !important;
+    line-height: 1.15 !important;
+  }
+
+  /* ——— HEADER ONLY ——— */
+  .player-list-section .pl-list-header {
+    font-size: 0.68rem !important;
+    letter-spacing: .6px !important;
+  }
+  .player-list-section .pl-list-header .pl-player-name {
+    font-size: 0.68rem !important;
+  }
+  .player-list-section .pl-list-header .pl-right-meta {
+    width: 160px !important;
+    grid-template-columns: 22px 34px 1fr !important;
+    column-gap: 6px !important;
+    font-size: 0.68rem !important;
+  }
+  .player-list-section .pl-list-header .pl-col-lgs {
+    font-size: 0.68rem !important;
+  }
+  
+  .player-list-section .pl-list-header .pl-player-info {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3px 0px !important;
+  }
+  
+  
+}
+
+
+
+/* --- Roster Player Card Key (ready) --- */
+#rosterPlayerCardKey.legend-card {
+  width: min(340px, 92%);
+  max-width: 340px;
+  margin: 0.9rem auto 0.4rem auto;  /* small gap above footnote */
+  padding: 0.8rem 0.85rem;
+  border-radius: var(--card-border-radius, 12px);
+  box-sizing: border-box;
+  flex: 0 0 auto;    /* prevent flex parents from stretching */
+  align-self: center;
+}
+@media (min-width: 1440px) {
+  #rosterPlayerCardKey.legend-card {
+    width: 320px;
+    max-width: 320px;
+  }
+}
+
+/* Top row alignment */
+#rosterPlayerCardKey .legend-main {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+#rosterPlayerCardKey .legend-name { font-weight: 700; color: var(--color-text-primary); }
+
+/* Position tag pill */
+#rosterPlayerCardKey .player-tag.legend-pos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.14rem 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, rgba(13,14,35,0.15), rgba(8,8,25,0.32));
+  border: 1px solid var(--color-panel-border);
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  backdrop-filter: blur(4px) saturate(110%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: .25px;
+  line-height: 1.05;
+}
+
+/* Meta row: keep things aligned; push the last separator so team sits right */
+#rosterPlayerCardKey .legend-meta {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+#rosterPlayerCardKey .legend-pos-rank { color: var(--pos-qb, #FF3A75cc); } /* typical pos-rank tint */
+#rosterPlayerCardKey .legend-age { color: var(--color-accent-primary, #58E6D9); }
+#rosterPlayerCardKey .legend-meta .separator:last-of-type {
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+#rosterPlayerCardKey .legend-team {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.12rem 0.55rem;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, rgba(13,14,35,0.15), rgba(8,8,25,0.32));
+  border: 1px solid var(--color-panel-border);
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  backdrop-filter: blur(4px) saturate(110%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+  color: var(--color-text-primary);
+  font-weight: 800;
+  letter-spacing: .25px;
+}
+
+/* Bottom row: align to edges, no chips on values */
+#rosterPlayerCardKey .legend-bottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-panel-border);
+  padding-top: 0.35rem;
+}
+#rosterPlayerCardKey .kv-left, #rosterPlayerCardKey .kv-right {
+  color: var(--color-text-secondary);
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+#rosterPlayerCardKey .legend-ktc { color: #00EBC7; font-weight: 800; }
+#rosterPlayerCardKey .legend-adp { color: #58A7FF; font-weight: 800; }
+
+/* External footnote below the card */
+#rosterCardFootnote.legend-footnote {
+  margin: 0.25rem auto 0;
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--color-text-tertiary);
+  max-width: 340px;
+}
+@media (min-width: 1440px) {
+  #rosterCardFootnote.legend-footnote { max-width: 320px; }
+}
+
+
+/* --- Legend vertical spacing + centering tweaks --- */
+#rosterPlayerCardKey.legend-card {
+  /* spread out vertically by a lot */
+  padding: 1.25rem 0.95rem;
+}
+#rosterPlayerCardKey .legend-main {
+  margin-bottom: 0.9rem; /* spacing between name row and meta row */
+}
+#rosterPlayerCardKey .legend-meta {
+  margin-bottom: 0.9rem; /* spacing between meta row and bottom row */
+}
+/* KTC/ADP row vertically centered with its background */
+#rosterPlayerCardKey .legend-bottom {
+  align-items: center !important; /* center the text vertically */
+  min-height: 2.4rem;             /* give the row a stable height */
+}
+#rosterPlayerCardKey .kv-left,
+#rosterPlayerCardKey .kv-right {
+  gap: 0.45rem; /* comfortable label/value spacing */
+}
+#rosterPlayerCardKey .kv-left .value,
+#rosterPlayerCardKey .kv-right .value {
+  line-height: 1.15; /* improve vertical alignment appearance */
+}
+
+
+/* --- Legend bottom-row background: smaller vertical height without changing text spacing --- */
+#rosterPlayerCardKey .legend-bottom {
+  position: relative;
+  background: transparent !important; /* ensure no inherited row bg */
+}
+#rosterPlayerCardKey .legend-bottom::before {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: var(--legend-bottom-bg-height, 1.25rem); /* <-- adjust this to change the bg height */
+  border: 1px solid var(--color-panel-border);
+  background: linear-gradient(to bottom, rgba(13,14,35,0.35), rgba(8,8,25,0.60));
+  border-radius: 10px;
+  z-index: 0;
+  pointer-events: none;
+}
+#rosterPlayerCardKey .legend-bottom > * {
+  position: relative;
+  z-index: 1; /* keep text above the bg overlay */
+}
+
+/* --- Bottom bar rework: full-width inner container, no pseudo, no extra line above --- */
+#rosterPlayerCardKey .legend-bottom {
+  position: relative;
+  border-top: none !important;      /* remove the line above */
+  padding-top: 0 !important;
+  margin-top: 0.2rem;               /* small spacing from meta row (text spacing unchanged) */
+}
+
+#rosterPlayerCardKey .legend-bottom::before { 
+  content: none !important;         /* kill previous overlay if present */
+}
+
+#rosterPlayerCardKey .legend-bottom-bg {
+  display: flex;
+  align-items: center;              /* vertically middle-align KTC/ADP with the bar */
+  justify-content: space-between;
+  width: 110%;
+  padding: 0.55rem 0.75rem;         /* controls bar height; adjust first value for taller/shorter */
+  border: 1px solid rgba(88, 98, 149, 0.1);
+  background: linear-gradient(to bottom, rgba(13,14,35,0.35), rgba(8,8,25,0.60));
+  border-radius: 10px;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+  box-sizing: border-box;
+}
+
+#rosterPlayerCardKey .legend-bottom-bg .kv-left,
+#rosterPlayerCardKey .legend-bottom-bg .kv-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+#rosterPlayerCardKey .legend-bottom-bg .value { line-height: 1.15; }
+
+
+    /* --- CUSTOM RULE: Prevent Wrapping on Ownership Page --- */
+    #playerListView .pl-player-info,
+    #playerListView .pl-player-details {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+
+
+
+/* === Replaced Background: Parallax Pixel Starfield (inline, single-file) === */
+html { height: 100%; overflow-y: auto !important; overflow-x: hidden !important; }
+/* FIXED: Removed transparent background from body to fix Safari UI bar color */
+body { min-height: 100%; }
+
+#starfield { 
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    /* Sphere on TOP-LEFT (on top layer) */
+    radial-gradient(
+      660px 660px at 20% -20%,
+     rgba(52, 11, 113, 0.05) 1%, rgba(150, 0, 120, 0.05) 42%, rgba(115, 48, 250, 0.10) 62%, rgba(187, 0, 148, 0.05) 82%, rgba(255, 255, 255, 0) 100%),
+      radial-gradient(
+      460px 460px at 90% 10%,
+     rgba(52, 11, 113, 0.35) 1%, rgba(20, 48, 50, 0.25) 32%, rgba(50, 0, 20, 0.10) 62%, rgba(87, 0, 48, 0.10) 82%, rgba(255, 255, 255, 0) 100%),
+    /* Base starfield backdrop (below) */
+    radial-gradient(ellipse at 50% 100%, #1B2735 0%, #090A0F 100%);
+  background-repeat: no-repeat;  
+}
+
+/* Layers */
+#stars, #stars1, #stars2, #stars3 { position: absolute; left: 0; top: 0; }
+
+#stars1 {
+  width: 1px; 
+  height: 2px; 
+  background: transparent;
+  border-radius: 20px;
+  box-shadow: 1528px 425px #FF4089, 1965px 1848px #F08cd1, 466px 588px #008cd1, 1441px 1361px #008cd1, 1403px 1363px #FF00FF, 1010px 54px #008cd1, 904px 1539px #6300FF, 929px 1400px #7300ff, 1370px 1286px #008cd1, 612px 1109px #9900FF, 1899px 1371px #FF4089, 215px 873px #E86439, 1675px 1005px #FFF, 145px 1973px #FFF, 1974px 1948px #FFF, 128px 1115px #55FFAA, 1863px 1335px #FFF, 1540px 938px #FFF, 1739px 491px #FFF, 1898px 1397px #3700B3 , 706px 1264px #E86439, 1505px 1162px #FFF, 200px 1889px #FFF, 1044px 1230px #FF5090, 315px 1227px #00DFFF, 625px 217px #FFF, 252px 336px #00ABFF, 1714px 1743px #FFF, 778px 674px #FFF, 1959px 1137px #FF4089, 979px 677px #900FFF;
+  animation: animStar 450s linear infinite;
+}
+
+/* Small stars */
+#stars {
+  width: 1px; height: 1px; background: transparent;
+  border-radius: 20px;
+  box-shadow: 1528px 425px #FFF, 1965px 1848px #FFF, 466px 588px #FFF, 1441px 1361px #FFF, 395px 1296px #FFF, 1603px 1631px #FFF, 1403px 1363px #FFF, 1010px 54px #FFF, 904px 1539px #FFF, 929px 1400px #FFF, 1370px 1286px #FFF, 612px 1109px #FFF, 1899px 1371px #FFF, 215px 873px #FFF, 1997px 882px #FFF, 283px 759px #FFF, 1675px 1005px #FFF, 145px 1973px #FFF, 1974px 1948px #FFF, 128px 1115px #FFF, 1863px 1335px #FFF, 1540px 938px #FFF, 1739px 491px #FFF, 1898px 1397px #FFF, 706px 1264px #FFF, 1505px 1162px #FFF, 200px 1889px #FFF, 1044px 1230px #FFF, 315px 1227px #FFF, 625px 217px #FFF, 1813px 1135px #FFF, 287px 791px #FFF, 1131px 816px #FFF, 845px 87px #FFF, 272px 94px #FFF, 1341px 1194px #FFF, 1547px 893px #FFF, 1460px 1971px #FFF, 655px 1052px #FFF, 1178px 815px #FFF, 1643px 1785px #FFF, 1172px 277px #FFF, 1486px 280px #FFF, 134px 1224px #FFF, 338px 213px #FFF, 814px 1844px #FFF, 1207px 806px #FFF, 14px 526px #FFF, 957px 455px #7300ff, 518px 864px #7300ff, 321px 438px #7300ff, 1226px 1328px #FFF, 784px 1010px #FF0266 , 1052px 1568px #FF0266 , 350px 478px #FF0266 , 1923px 1968px #FF0266 , 292px 809px #7300ff, 944px 1725px #7300ff, 36px 1643px #7300ff, 1744px 1796px #7300ff, 649px 261px #7300ff, 1454px 166px #FF0266 , 1548px 476px #FF0266 , 1254px 1137px #FF0266 , 597px 730px #FF0266 , 1522px 1228px #FF0266 , 441px 724px #FF0266 , 1503px 451px #FF0266 , 418px 57px #FF0266 , 1459px 1767px #FF0266 , 431px 1686px #FF0266 , 738px 219px #FF0266 , 420px 1150px #FF0266 , 1424px 685px #FF0266 , 1503px 1039px #FF0266 , 1365px 856px #7300ff, 341px 42px #7300ff, 646px 1985px #7300ff, 1589px 1094px #7300ff, 1284px 711px #7300ff, 637px 1761px #7300ff, 191px 1522px #7300ff, 530px 436px #7300ff, 454px 1539px #7300ff, 1831px 1292px #7300ff, 1697px 811px #7300ff, 1542px 740px #7300ff, 256px 235px #FF0266 , 853px 329px #FF0266 , 250px 124px #FF0266 , 1823px 525px #FF0266 , 1999px 1499px #FF0266 , 789px 367px #FF0266 , 1531px 315px #FF0266 , 1519px 1955px #FF0266 , 247px 505px #FFF, 559px 657px #FF0266 , 1399px 1938px #FF0266 , 618px 1150px #FF0266 , 1938px 731px #FFF, 995px 188px #FFF, 1989px 1231px #FFF, 97px 682px #FFF, 1640px 1005px #FFF, 1556px 1506px #FFF, 1381px 758px #FFF, 1460px 611px #FFF, 1635px 1315px #FFF, 1114px 200px #FFF, 546px 1289px #FFF, 1445px 1736px #FFF, 643px 1087px #FFF, 348px 399px #FFF, 1342px 1288px #FFF, 680px 1574px #FFF, 1942px 33px #FFF, 1839px 1742px #FFF, 1197px 679px #FFF, 153px 1969px #FFF, 980px 861px #FFF, 1940px 633px #FFF, 555px 149px #FFF, 2px 1915px #FFF, 130px 1888px #FFF, 618px 1246px #FFF, 282px 1560px #FFF, 296px 1541px #FFF, 1774px 1080px #FFF, 1886px 1369px #FFF, 1039px 424px #FFF, 138px 476px #FFF, 757px 1110px #FFF, 168px 959px #FFF, 1031px 549px #FFF, 1028px 1925px #FFF, 661px 1642px #FFF, 1511px 197px #FFF, 762px 772px #FFF, 1649px 843px #FFF, 646px 1469px #FFF, 1723px 1170px #FFF, 546px 562px #FFF, 1063px 1998px #FFF, 1178px 608px #FFF, 1674px 768px #FFF, 1587px 501px #FFF, 1900px 874px #FFF, 133px 512px #FFF, 889px 356px #FFF, 1357px 659px #FFF, 555px 392px #FFF, 611px 1597px #FFF, 1500px 115px #FFF, 157px 1161px #FFF, 1479px 1475px #FFF, 1446px 1669px #FFF, 140px 1465px #7300ff, 1411px 69px #7300ff, 782px 968px #7300ff, 2000px 42px #7300ff, 797px 491px #7300ff, 1928px 1770px #7300ff, 475px 915px #7300ff, 412px 1807px #7300ff, 23px 914px #FFF, 676px 961px #FFF, 1952px 457px #FFF, 1279px 224px #FFF, 451px 1797px #FFF, 1254px 1586px #FFF, 1309px 1654px #FFF, 735px 787px #FFF, 1828px 1871px #FFF, 1966px 1938px #FFF, 582px 222px #FFF, 1868px 854px #FFF, 1085px 1508px #FFF, 1578px 1362px #FFF, 1655px 1189px #FFF, 1638px 774px #FFF, 1666px 707px #FFF, 50px 1265px #FFF, 1769px 1686px #FFF, 1243px 355px #FFF, 1466px 307px #FFF, 558px 632px #FFF, 106px 947px #FFF, 1141px 1486px #FFF, 1260px 1124px #FFF, 759px 210px #FFF, 294px 1281px #FFF, 1870px 929px #FFF, 1512px 1564px #FFF, 1803px 894px #FFF, 1162px 638px #FFF, 1500px 303px #FFF, 915px 224px #FFF, 402px 1417px #FFF, 718px 10px #FFF, 158px 1203px #FFF, 804px 556px #FFF, 1521px 259px #FFF, 670px 2000px #FFF, 23px 1093px #FFF, 1665px 1430px #FFF, 1897px 407px #FFF, 1775px 1933px #FFF, 97px 1786px #FFF, 515px 931px #FFF, 1361px 1465px #FFF, 1090px 255px #FFF, 1281px 854px #FFF, 1782px 829px #FFF, 825px 526px #FFF, 1759px 208px #FFF, 1660px 1970px #FFF, 190px 1281px #FFF, 1691px 108px #FFF, 714px 100px #FFF, 1064px 1928px #FFF, 606px 181px #FFF, 1170px 821px #FFF, 1120px 1925px #FFF, 1616px 82px #FFF, 285px 1097px #FFF, 881px 25px #FFF, 861px 383px #FFF, 1735px 1987px #FFF, 1167px 104px #FFF, 1965px 1651px #FFF, 166px 446px #FFF, 925px 1045px #FFF, 578px 387px #FFF, 236px 863px #FFF, 420px 177px #FFF, 1161px 1539px #FFF, 238px 763px #FFF, 1729px 1523px #FFF, 1188px 134px #FFF, 1634px 1606px #FFF, 322px 1217px #FFF, 1507px 318px #FFF, 1536px 1588px #FFF, 244px 968px #FFF, 466px 1776px #FFF, 1594px 558px #FFF, 558px 460px #FFF, 1186px 1622px #FFF, 1856px 1178px #FFF, 1734px 1361px #FFF, 1818px 1091px #FFF, 1712px 731px #FFF, 571px 1364px #FFF, 782px 1152px #FFF, 1232px 254px #FFF, 365px 165px #FFF, 1433px 487px #FF0266 , 1370px 1319px #FF0266 , 585px 87px #FFF, 773px 1526px #FF0266 , 1146px 342px #FF0266 , 791px 1716px #FF0266 , 1250px 812px #FF0266 , 1802px 232px #FF0266 , 1890px 366px #FF0266 , 1028px 170px #FFF, 1829px 360px #FFF, 490px 875px #FFF, 630px 1630px #FFF, 137px 465px #FFF, 1143px 954px #FFF, 701px 147px #FFF, 250px 1823px #FFF, 16px 254px #FFF, 1571px 1189px #FFF, 952px 1239px #FFF, 1759px 629px #FFF, 363px 788px #FF0266, 1545px 163px #FFF, 1025px 661px #FFF, 865px 1708px #FFF, 1573px 1883px #FFF, 1253px 393px #FFF, 1085px 748px #FFF, 1635px 1758px #FFF, 1672px 604px #FFF, 1295px 1928px #FFF, 1046px 1180px #FFF, 1161px 403px #FFF, 1085px 470px #FFF, 243px 1505px #FFF, 906px 1503px #FFF, 313px 555px #FFF, 938px 1019px #FFF, 1436px 875px #FFF, 1528px 1133px #FFF, 1914px 1160px #FFF, 370px 1247px #FFF, 1408px 1179px #FFF, 1658px 1100px #FFF, 982px 254px #FFF, 1044px 1408px #FFF, 1407px 1784px #FFF, 1022px 566px #FFF, 423px 1938px #FFF, 128px 1233px #FFF, 1925px 689px #FFF, 254px 737px #FFF, 387px 804px #FFF, 1605px 1104px #FFF, 119px 1712px #FFF, 1235px 1014px #FFF, 1022px 1749px #FFF, 152px 974px #FFF, 1682px 1219px #FFF, 810px 260px #FFF, 35px 484px #FFF, 166px 703px #FFF, 616px 684px #FFF, 1260px 1348px #FFF, 74px 1307px #7300ff, 1994px 1497px #7300ff, 230px 532px #7300ff, 468px 280px #7300ff, 1738px 207px #7300ff, 1753px 734px #7300ff, 1672px 949px #7300ff, 57px 132px #7300ff, 1403px 183px #7300ff, 410px 282px #7300ff, 1627px 1809px #7300ff, 1277px 899px #7300ff, 1264px 1522px #7300ff, 788px 1868px #7300ff, 1824px 1065px #FFF, 1821px 283px #FFF, 1901px 1290px #FFF, 850px 1682px #FFF, 82px 1661px #FFF, 655px 1383px #FFF, 379px 807px #FFF, 1264px 248px #FFF, 127px 1309px #FFF, 423px 928px #FFF, 1467px 1471px #FFF, 32px 1453px #FFF, 1135px 1763px #FFF, 701px 1534px #FFF, 1234px 1737px #FFF, 1191px 148px #FFF, 734px 1540px #FFF, 1780px 1676px #FFF, 1702px 213px #FFF, 436px 1440px #FFF, 955px 1193px #FFF, 1322px 1615px #FFF, 410px 111px #FFF, 1071px 1447px #FFF, 106px 865px #FFF, 1520px 222px #FFF, 645px 443px #FFF, 1430px 1384px #FFF, 1666px 377px #FFF, 1566px 1474px #FFF, 180px 1323px #FFF, 148px 865px #FFF, 196px 303px #FFF, 58px 343px #FFF, 1314px 391px #FFF, 1540px 424px #FFF, 829px 1898px #FFF, 1871px 411px #FFF, 286px 1553px #FFF, 1453px 1290px #FFF, 1874px 470px #FFF, 1338px 393px #FFF, 1613px 11px #FFF, 1575px 312px #FFF, 418px 1672px #FFF, 1640px 1285px #FFF, 193px 8px #FFF, 464px 1088px #FFF, 1499px 1634px #FFF, 1104px 1978px #FFF, 504px 1462px #FFF, 1120px 1254px #FFF, 643px 757px #FFF, 333px 832px #FFF, 1285px 1515px #FFF, 1002px 960px #FFF, 576px 1431px #FFF, 1524px 971px #FFF, 1659px 740px #FFF, 1939px 694px #FFF, 1575px 1222px #FFF, 500px 365px #FFF, 838px 875px #FFF, 1901px 1349px #FFF, 1028px 1784px #FFF, 935px 269px #FFF, 1839px 746px #FFF, 1882px 16px #FFF, 1221px 1077px #FFF, 148px 321px #FFF, 983px 1466px #FFF, 1327px 1181px #FFF, 516px 1232px #FFF, 1129px 1348px #FFF, 1962px 61px #FFF, 1487px 1480px #FFF, 1889px 1173px #FFF, 1139px 1737px #FFF, 679px 1475px #FFF, 1556px 932px #FFF, 1938px 560px #FFF, 1569px 546px #FFF, 1619px 1851px #FFF, 119px 237px #FFF, 1111px 368px #FFF, 74px 1778px #FFF, 1346px 1193px #FFF, 381px 885px #FFF, 1220px 52px #FFF, 849px 1155px #FFF, 1559px 180px #FFF, 1536px 881px #FFF, 1147px 824px #FFF, 1868px 1852px #FFF, 1158px 892px #FFF, 717px 136px #FFF, 387px 1191px #FFF, 1492px 168px #FFF, 1727px 665px #FFF, 688px 226px #FFF, 1448px 1329px #FFF, 1882px 596px #FFF, 1005px 1554px #FFF, 1893px 1343px #FFF, 738px 1036px #FFF, 1494px 82px #FFF, 135px 221px #FFF, 1289px 840px #FFF, 68px 42px #FFF, 734px 876px #FFF, 1063px 1091px #FFF, 410px 1291px #FFF, 1341px 22px #FFF, 753px 387px #FFF, 1545px 1172px #FFF, 1354px 1144px #FFF, 1643px 441px #FFF, 1594px 610px #FFF, 251px 137px #FFF, 690px 1125px #FFF, 64px 162px #FFF, 1058px 383px #FFF, 1162px 586px #FFF, 1310px 836px #FFF, 775px 1846px #FFF, 1802px 574px #FFF, 1040px 1543px #FFF, 885px 1291px #FFF, 1396px 1039px #FFF, 665px 1812px #FFF, 819px 1993px #FFF, 127px 1873px #FFF, 557px 948px #FFF, 525px 1469px #FFF, 1500px 1544px #FF0266 , 1466px 1587px #FF0266 , 1984px 961px #FF0266 , 1860px 1848px #FF0266 , 1060px 1761px #FFF, 1907px 313px #FF0266 , 1367px 850px #FF0266 , 1714px 193px #FF0266 , 786px 38px #FF0266 , 1169px 1910px #FF0266 , 1782px 1960px #FF0266 , 1751px 379px #FFF, 278px 260px #FFF, 101px 405px #FFF, 315px 286px #FFF, 1770px 1739px #FFF, 425px 1854px #FFF, 1040px 1816px #FFF, 1771px 1608px #FFF, 64px 285px #FFF, 253px 1429px #FFF, 524px 239px #FFF, 1551px 77px #FFF, 1670px 349px #FFF, 837px 403px #FFF, 696px 1492px #FFF, 1225px 751px #FFF, 61px 797px #FFF, 1715px 1683px #FFF, 1176px 806px #FFF, 167px 965px #FFF, 959px 210px #FFF, 1648px 745px #FFF, 1591px 1091px #FFF, 1982px 1949px #FFF, 1807px 86px #FFF, 137px 1221px #FFF, 1674px 1042px #FFF, 1635px 288px #FFF, 1983px 247px #FFF, 979px 1677px #FFF, 210px 726px #FFF, 375px 770px #FFF, 1512px 752px #FFF, 1664px 1532px #FFF, 8px 221px #FFF, 971px 1668px #FFF, 1243px 1935px #FFF, 1014px 1836px #FFF, 1063px 210px #FFF, 1871px 850px #FFF, 952px 408px #FFF, 121px 926px #FFF, 526px 1993px #FFF, 1616px 481px #FFF, 1441px 492px #FFF, 456px 1013px #FFF, 1370px 1753px #FFF, 1149px 137px #FFF, 844px 1568px #FFF, 727px 1038px #FFF, 1622px 1964px #FFF, 745px 402px #FFF, 468px 1655px #FFF, 1380px 1718px #FFF, 41px 4px #FFF, 955px 1131px #FFF, 1524px 587px #FFF, 1598px 1384px #FFF, 590px 1914px #FFF, 645px 1994px #FFF, 1696px 667px #FFF, 1772px 53px #FFF, 1336px 25px #FFF, 331px 887px #FFF, 1224px 1292px #FFF, 666px 1276px #FFF, 386px 367px #FFF, 747px 1748px #FFF, 850px 1193px #FFF, 1657px 1535px #FFF, 178px 1859px #FFF, 313px 615px #FFF, 1737px 1009px #FFF, 451px 241px #FFF, 1712px 1603px #FFF, 263px 38px #FFF, 1441px 1511px #FFF, 1035px 782px #FFF, 755px 112px #FFF, 879px 1214px #FFF, 445px 1417px #FFF, 467px 362px #FFF, 263px 1198px #FFF, 471px 1516px #FFF, 985px 1319px #FFF, 464px 1348px #FFF, 1669px 910px #FFF, 497px 925px #FFF, 738px 1155px #FFF, 1489px 1982px #FFF, 1643px 575px #FFF, 1387px 194px #FFF, 1375px 1490px #FFF, 845px 295px #FFF, 785px 325px #FFF, 704px 401px #FFF, 532px 83px #FFF, 1390px 1508px #FFF, 1481px 720px #FFF, 1818px 937px #FFF, 1989px 976px #FFF, 642px 1965px #FFF, 1032px 1018px #FFF, 1132px 1575px #FF0266 , 420px 728px #FF0266 , 867px 241px #FF0266 , 323px 265px #FF0266 , 229px 573px #FFF, 119px 1854px #FF0266 , 947px 106px #FF0266 , 1264px 1178px #FFF, 1614px 1429px #FFF, 1172px 811px #FFF, 1247px 1441px #FFF, 1867px 418px #FFF, 180px 904px #FFF, 1693px 1967px #FFF, 1899px 1218px #FFF, 1488px 460px #FFF, 1774px 360px #FFF, 306px 250px #FFF, 934px 242px #FFF, 731px 1344px #FFF, 1573px 1087px #FFF, 139px 1888px #FFF, 603px 1160px #FFF, 1411px 314px #FFF, 421px 1016px #FFF, 829px 1568px #FFF, 1319px 199px #FFF, 1586px 1316px #FFF, 830px 1008px #FFF, 133px 659px #FFF, 390px 737px #FFF, 1739px 1708px #FFF, 1994px 1806px #FFF, 721px 1901px #FFF, 1861px 1222px #FFF, 997px 1759px #FFF, 674px 1599px #FFF, 322px 1215px #FFF, 1698px 308px #FFF, 911px 478px #FFF, 1722px 1884px #FFF, 103px 71px #FFF, 513px 424px #FFF, 618px 1074px #FFF, 8px 913px #FFF, 1322px 583px #FFF, 1603px 230px #FFF, 1857px 1046px #FFF, 126px 583px #FFF, 577px 158px #FFF, 1779px 985px #FFF, 142px 821px #FFF, 1172px 98px #FFF, 183px 1602px #FFF, 1531px 1129px #FFF, 328px 318px #FFF, 197px 1680px #FFF, 632px 412px #FFF, 359px 416px #FFF, 704px 1449px #FFF, 409px 415px #FFF, 27px 829px #FFF, 1528px 1075px #FFF, 1501px 868px #FFF, 1501px 1723px #FFF, 375px 772px #FFF, 12px 781px #FFF, 1284px 1785px #FFF, 280px 1776px #FFF, 1122px 1307px #FFF, 982px 1098px #FFF, 1278px 394px #FFF, 439px 1555px #FFF, 1154px 401px #FFF, 1317px 1313px #FFF, 551px 750px #FFF, 1350px 1392px #FFF, 1386px 544px #FFF, 860px 1745px #FFF, 1164px 571px #FFF, 14px 1522px #FFF, 1047px 1740px #FFF, 1425px 1697px #FFF, 1093px 1473px #FFF, 1827px 1566px #FFF, 1759px 1732px #FFF, 327px 1195px #FFF, 138px 1788px #FFF, 1280px 499px #FFF, 391px 1907px #FFF, 662px 937px #FFF, 1612px 871px #FFF, 147px 1755px #FFF, 562px 549px #FFF, 1843px 1808px #FFF, 1216px 385px #FFF, 944px 730px #FFF, 304px 223px #FFF, 801px 1487px #FFF, 496px 301px #FFF, 1476px 1828px #FFF, 228px 1311px #FFF, 1117px 374px #FFF, 986px 1637px #FFF, 366px 1044px #FFF, 1003px 1192px #FFF, 420px 1821px #FFF, 1425px 835px #FFF, 219px 1890px #FFF, 1493px 61px #FFF, 766px 1189px #FFF, 159px 431px #FFF, 252px 336px #FFF, 1714px 1743px #FFF, 778px 674px #FFF, 1959px 1137px #FFF, 979px 677px #FFF, 1104px 214px #FFF;
+}
+
+/* Medium stars */
+#stars2 {
+  width: 2px; height: 2px; background: transparent;
+  border-radius: 10px;
+  box-shadow: 444px 26px #FFF, 644px 550px #FFF, 428px 426px #FFF, 12px 1913px #FFF, 680px 225px #FFF, 1346px 474px #FFF, 6px 1693px #FFF, 1555px 996px #FFF, 579px 1620px #FFF, 364px 1911px #FFF, 282px 1788px #FFF, 280px 337px #FFF, 1880px 1547px #FF0266 , 1531px 1567px #FF0266 , 193px 1099px #FF0266 , 1540px 17px #FF0266 , 1774px 292px #FF0266 , 183px 775px #FF0266 , 214px 107px #FFF, 695px 88px #FFF, 490px 1209px #FFF, 1374px 560px #FFF, 752px 1759px #FFF, 1985px 866px #FFF, 609px 310px #FFF, 86px 1036px #FFF, 638px 191px #FFF, 1635px 626px #FFF, 78px 998px #FFF, 1189px 1345px #FFF, 48px 1383px #FFF, 1981px 345px #FFF, 1993px 1838px #FFF, 717px 1540px #FFF, 287px 673px #FFF, 1821px 1665px #FFF, 686px 600px #FFF, 572px 777px #FFF, 932px 537px #FFF, 1808px 1538px #FFF, 1563px 305px #FFF, 1771px 1974px #FFF, 393px 1768px #FFF, 368px 1426px #FFF, 434px 779px #FFF, 566px 1370px #FFF, 261px 791px #FFF, 141px 434px #1ACDD1, 1070px 106px #FFF, 307px 779px #FFF, 215px 1411px #FFF, 1789px 330px #FFF, 912px 724px #FFF, 639px 816px #FFF, 1354px 991px #FFF, 1998px 477px #FFF, 5px 1499px #FFF, 669px 135px #FFF, 961px 593px #FFF, 411px 629px #FFF, 1553px 969px #FFF, 1739px 1533px #FFF, 1860px 440px #FFF, 568px 23px #FFF, 822px 1508px #FFF, 1685px 267px #FFF, 1906px 369px #FFF, 1884px 783px #FFF, 1753px 1728px #FFF, 1401px 258px #FFF, 1962px 1204px #FFF, 1890px 816px #FFF, 1873px 641px #FFF, 1315px 1410px #FFF, 25px 434px #FFF, 330px 1299px #FFF, 679px 397px #FFF, 1561px 1197px #FFF, 354px 801px #FFF, 1803px 577px #FFF, 406px 822px #FFF, 1062px 641px #7300ff, 1449px 1905px #7300ff, 1912px 1971px #7300ff, 172px 718px #7300ff, 227px 477px #7300ff, 586px 1527px #7300ff, 1215px 326px #E86439, 104px 293px #7300ff, 667px 536px #7300ff, 1943px 1800px #E86439, 992px 269px #7300ff, 1896px 795px #1ACDD1, 1907px 1066px #7300ff, 1188px 1519px #7300ff, 467px 1622px #1ACDD1, 1326px 1651px #FFF, 1820px 1089px #FFF, 1012px 516px #FFF, 1841px 299px #FFF, 1437px 313px #FFF, 40px 1643px #FFF, 1244px 1400px #FFF, 335px 1893px #FFF, 729px 1430px #FFF, 1241px 1046px #FFF, 1335px 241px #FFF, 764px 395px #FFF, 353px 489px #FFF, 531px 862px #FFF, 351px 1607px #FFF, 1443px 21px #FFF, 62px 1781px #FFF, 1926px 1515px #FFF, 1408px 1607px #FFF, 80px 692px #FFF, 523px 102px #FFF, 1609px 1437px #FFF, 652px 948px #E86439, 1246px 1087px #FFF, 94px 1730px #FFF, 838px 732px #FFF, 613px 1055px #FFF, 1765px 490px #FFF, 1307px 962px #FFF, 197px 803px #FFF, 1830px 285px #FFF, 1346px 1930px #FFF, 1089px 570px #FFF, 1583px 1327px #FFF, 297px 1173px #FFF, 993px 819px #FFF, 629px 1443px #FFF, 1773px 564px #FFF, 1757px 1154px #FFF, 615px 1504px #FFF, 1796px 1070px #FFF, 1272px 1228px #FFF, 855px 1601px #FFF, 1378px 1026px #FFF, 1069px 610px #FFF, 1578px 1237px #FFF, 410px 506px #FFF, 443px 1746px #FF0266 , 744px 1416px #FF0266 , 321px 1443px #FF0266 , 999px 384px #FF0266 , 100px 245px #FF0266 , 836px 394px #FF0266 , 1254px 718px #FF0266 , 1024px 59px #FF0266 , 1687px 1065px #FF0266 , 1975px 1473px #FFF, 172px 1058px #FFF, 977px 1672px #FFF, 1797px 367px #FFF, 1555px 580px #FFF, 944px 944px #FFF, 1925px 458px #FFF, 707px 840px #FFF, 1784px 97px #FFF, 1380px 1943px #FFF, 1257px 1347px #FFF, 1814px 1359px #FFF, 341px 327px #7300ff, 1126px 693px #7300ff, 677px 1621px #7300ff, 1940px 1982px #7300ff, 1654px 1269px #7300ff, 741px 1483px #FFF, 1889px 93px #FFF, 199px 70px #FFF, 1378px 1780px #FFF, 1887px 439px #FFF, 895px 130px #FFF, 1186px 1162px #FFF, 428px 1806px #FFF, 1420px 451px #FFF, 871px 1996px #FFF, 535px 1013px #FFF, 766px 1794px #FFF, 1823px 1514px #FFF, 1929px 610px #FFF, 629px 1965px #FFF, 1247px 1154px #FFF, 688px 242px #FFF, 798px 1471px #FFF, 1048px 1943px #FFF, 1372px 443px #FFF, 202px 312px #FFF, 728px 435px #FFF, 1258px 1514px #FFF, 473px 14px #FFF, 593px 721px #FFF, 1325px 1453px #FFF, 164px 1833px #FFF, 1050px 191px #FFF, 1965px 110px #FFF, 1047px 1757px #FFF, 1643px 1744px #FFF;
+  animation: animStar 400s linear infinite;
+}
+#stars2::after {
+  content: ""; position: absolute; top: 2000px;
+  width: 2px; height: 2px; background: transparent;
+  border-radius: 10px;
+  box-shadow: 444px 26px #FFF, 644px 550px #FFF, 428px 426px #FFF, 12px 1913px #FFF, 680px 225px #FFF, 1346px 474px #FFF, 6px 1693px #FFF, 1555px 996px #FFF, 579px 1620px #FFF, 364px 1911px #FFF, 282px 1788px #FFF, 280px 337px #FFF, 1880px 1547px #FFF, 1531px 1567px #FFF, 193px 1099px #FFF, 1540px 17px #FFF, 1774px 292px #FF0266 , 183px 775px #FF0266 , 214px 107px #FF0266 , 695px 88px #FF0266 , 490px 1209px #FF0266 , 1374px 560px #FF0266 , 752px 1759px #7300ff, 1985px 866px #7300ff, 609px 310px #7300ff, 86px 1036px #7300ff, 638px 191px #7300ff, 1635px 626px #7300ff, 78px 998px #7300ff, 1189px 1345px #7300ff, 48px 1383px #7300ff, 1981px 345px #7300ff, 1993px 1838px #7300ff, 717px 1540px #7300ff, 287px 673px #7300ff, 1821px 1665px #7300ff, 686px 600px #7300ff, 572px 777px #FFF, 932px 537px #FFF, 1808px 1538px #FFF, 1563px 305px #FFF, 1771px 1974px #FFF, 393px 1768px #FFF, 368px 1426px #FFF, 434px 779px #FFF, 566px 1370px #FFF, 261px 791px #FFF, 141px 434px #FFF, 1070px 106px #E86439, 307px 779px #FFF, 215px 1411px #E86439, 1789px 330px #FFF, 912px 724px #FFF, 639px 816px #FFF, 1354px 991px #FFF, 1998px 477px #E86439, 5px 1499px #FFF, 669px 135px #FFF, 961px 593px #FFF, 411px 629px #E86439, 1553px 969px #E86439, 1739px 1533px #E86439, 1860px 440px #FFF, 568px 23px #FFF, 822px 1508px #FFF, 1685px 267px #FFF, 1906px 369px #FFF, 1884px 783px #FFF, 1753px 1728px #FFF, 1401px 258px #FFF, 1962px 1204px #FFF, 1890px 816px #FFF, 1873px 641px #FFF, 1315px 1410px #FFF, 25px 434px #FFF, 330px 1299px #FFF, 679px 397px #FFF, 1561px 1197px #FFF, 354px 801px #FFF, 1803px 577px #FFF, 406px 822px #FFF, 1062px 641px #FFF, 1449px 1905px #FFF, 1912px 1971px #FFF, 172px 718px #FFF, 227px 477px #FFF, 586px 1527px #FFF, 1215px 326px #FFF, 104px 293px #FFF, 667px 536px #FFF, 1943px 1800px #FFF, 992px 269px #FFF, 1896px 795px #FFF, 1907px 1066px #FFF, 1188px 1519px #FFF, 467px 1622px #FFF, 1326px 1651px #FFF, 1820px 1089px #FFF, 1012px 516px #FFF, 1841px 299px #FFF, 1437px 313px #FFF, 40px 1643px #FFF, 1244px 1400px #FFF, 335px 1893px #FFF, 729px 1430px #FFF, 1241px 1046px #FFF, 1335px 241px #FFF, 764px 395px #FFF, 353px 489px #FFF, 531px 862px #FFF, 351px 1607px #FFF, 1443px 21px #FFF, 62px 1781px #FFF, 1926px 1515px #FFF, 1408px 1607px #FFF, 80px 692px #FFF, 523px 102px #FFF, 1609px 1437px #FFF, 652px 948px #FFF, 1246px 1087px #FFF, 94px 1730px #FFF, 838px 732px #FFF, 613px 1055px #FFF, 1765px 490px #FFF, 1307px 962px #FFF, 197px 803px #FFF, 1830px 285px #FFF, 1346px 1930px #FFF, 1089px 570px #FFF, 1583px 1327px #FFF, 297px 1173px #E86439, 993px 819px #7300ff, 629px 1443px #7300ff, 1773px 564px #7300ff, 1757px 1154px #7300ff, 615px 1504px #7300ff, 1796px 1070px #7300ff, 1272px 1228px #7300ff, 855px 1601px #7300ff, 1378px 1026px #7300ff, 1069px 610px #7300ff, 1578px 1237px #7300ff, 410px 506px #7300ff, 443px 1746px #FF0266 , 744px 1416px #FF0266 , 321px 1443px #FF0266 , 999px 384px #FF0266 , 100px 245px #FFF, 836px 394px #FFF, 1254px 718px #FFF, 1024px 59px #FFF, 1687px 1065px #FFF, 1975px 1473px #FFF, 172px 1058px #FFF, 977px 1672px #FFF, 1797px 367px #FFF, 1555px 580px #FFF, 944px 944px #FFF, 1925px 458px #FFF, 707px 840px #FFF, 1784px 97px #FFF, 1380px 1943px #FFF, 1257px 1347px #FFF, 1814px 1359px #FFF, 341px 327px #FFF, 1126px 693px #FFF, 677px 1621px #FFF, 1940px 1982px #FFF, 1654px 1269px #FFF, 741px 1483px #FFF, 1889px 93px #FFF, 199px 70px #FFF, 1378px 1780px #FFF, 1887px 439px #FFF, 895px 130px #FFF, 1186px 1162px #FFF, 428px 1806px #FFF, 1420px 451px #FFF, 871px 1996px #FFF, 535px 1013px #FFF, 766px 1794px #FFF, 1823px 1514px #FFF, 1929px 610px #FFF, 629px 1965px #FFF, 1247px 1154px #FFF, 688px 242px #FFF, 798px 1471px #FFF, 1048px 1943px #FFF, 1372px 443px #FFF, 202px 312px #FFF, 728px 435px #FFF, 1258px 1514px #FFF, 473px 14px #FFF, 593px 721px #FFF, 1325px 1453px #FFF, 164px 1833px #FFF, 1050px 191px #FFF, 1965px 110px #FFF, 1047px 1757px #FFF, 1643px 1744px #FFF;
+}
+
+/* Big stars */
+#stars3 {
+  width: 4px; height: 4px; background: transparent;
+  border-radius: 15px;
+  box-shadow: 1208px 1620px #FF0070, 576px 1883px #FFF, 1810px 913px #FFF, 87px 1117px #FFF, 1076px 1851px #FFF, 859px 264px #FFF, 1469px 1346px #FFF, 1651px 1493px #FFF, 767px 822px #FFF, 359px 967px #FFF, 1009px 808px #FF0070, 100px 1656px #7300ff, 1365px 1511px #7300ff, 429px 1279px #7300ff, 1381px 1850px #E86439, 1896px 1999px #E86439, 236px 718px #7300ff, 39px 1731px #7300ff, 562px 1084px #7300ff, 1067px 1431px #FF0266 , 1362px 1575px #FF0266 , 953px 1860px #FF0266 , 1498px 499px #FF0266 , 1055px 885px #FFF, 1824px 1334px #FFF, 519px 1319px #FFF, 1716px 1538px #FFF, 1305px 524px #FFF, 808px 1972px #FFF, 426px 649px #FFF, 882px 1530px #FFF, 623px 557px #FFF, 129px 1750px #FF0070, 1220px 646px #FFF, 441px 1797px #FFF, 1526px 1032px #FFF, 1301px 568px #FFF, 172px 40px #FFF, 364px 489px #FFF, 516px 1786px #FFF, 1218px 1864px #FFF, 888px 199px #FFF, 1852px 1046px #FFF, 460px 907px #FFF, 202px 1519px #FFF, 238px 1294px #FFF, 261px 955px #FFF, 1947px 1249px #FFF, 1527px 2px #FFF, 696px 553px #FFF, 80px 681px #FFF, 1778px 1610px #FFF, 936px 1498px #FFF, 1912px 1309px #FFF, 14px 1417px #FFF, 1784px 1888px #FFF, 989px 22px #FFF, 1892px 1420px #FFF, 1803px 411px #FFF, 1854px 1371px #FFF, 1095px 1627px #FFF, 89px 1862px #E86439, 1562px 1960px #FFF, 1436px 1174px #7300ff, 1929px 1025px #7300ff, 1623px 1817px #1ACDD1, 1320px 1371px #E86439, 789px 750px #7300ff, 1934px 2000px #FFF, 1657px 238px #FFF, 597px 1213px #FF0266 , 220px 147px #FF0266 , 1466px 1933px #E86439, 254px 1672px #FFF, 1272px 1117px #FFF, 1364px 1831px #FFF, 668px 1228px #E86439, 388px 1234px #FFF, 776px 1969px #FFF, 1615px 1121px #FFF, 1029px 429px #FFF, 1575px 91px #FFF, 1974px 896px #FFF, 1176px 758px #FFF, 1936px 1211px #FFF, 1802px 568px #FFF, 257px 1188px #FFF, 599px 1393px #FFF, 1145px 49px #FFF, 481px 1942px #FFF, 864px 981px #FFF, 1776px 1502px #FFF, 1962px 917px #FFF, 496px 56px #FFF, 1978px 748px #FFF, 878px 717px #FFF, 181px 508px #FFF, 1573px 424px #FFF, 747px 594px #FFF, 539px 1421px #FFF;
+  animation: animStar 500s linear infinite;
+}
+#stars3::after {
+  content: ""; position: absolute; top: 2000px;
+  width: 3px; height: 3px; background: transparent;
+  border-radius: 20px;
+  box-shadow: 1208px 1620px #FFF, 576px 1883px #7300ff, 1810px 913px #7300ff, 87px 1117px #7300ff, 1076px 1851px #7300ff, 859px 264px #E86439, 1469px 1346px #FFF, 1651px 1493px #FFF, 767px 822px #FFF, 359px 967px #FFF, 1009px 808px #FFF, 100px 1656px #FFF, 1365px 1511px #FFF, 429px 1279px #E86439, 1381px 1850px #1ACDD1, 1896px 1999px #FFF, 236px 718px #FFF, 39px 1731px #FFF, 562px 1084px #FFF, 1067px 1431px #E86439, 1362px 1575px #FFF, 953px 1860px #FFF, 1498px 499px #FFF, 1055px 885px #FFF, 1824px 1334px #FFF, 519px 1319px #FF0266 , 1716px 1538px #FF0266 , 1305px 524px #FF0266 , 808px 1972px #FF0266 , 426px 649px #FF0266 , 882px 1530px #FF0266 , 623px 557px #FF0266 , 129px 1750px #FFF, 1220px 646px #FFF, 441px 1797px #FFF, 1526px 1032px #FFF, 1301px 568px #FFF, 172px 40px #FFF, 364px 489px #FFF, 516px 1786px #FFF, 1218px 1864px #FFF, 888px 199px #FFF, 1852px 1046px #FFF, 460px 907px #FFF, 202px 1519px #FFF, 238px 1294px #FFF, 261px 955px #FFF, 1947px 1249px #FFF, 1527px 2px #FFF, 696px 553px #FFF, 80px 681px #FFF, 1778px 1610px #FFF, 936px 1498px #FFF, 1912px 1309px #FFF, 14px 1417px #7300ff, 1784px 1888px #7300ff, 989px 22px #7300ff, 1892px 1420px #7300ff, 1803px 411px #7300ff, 1854px 1371px #E86439, 1095px 1627px #7300ff, 89px 1862px #7300ff, 1562px 1960px #FFF, 1436px 1174px #E86439, 1929px 1025px #FFF, 1623px 1817px #FFF, 1320px 1371px #FFF, 789px 750px #FFF, 1934px 2000px #FFF, 1657px 238px #E86439, 597px 1213px #E86439, 220px 147px #E86439, 1466px 1933px #E86439, 254px 1672px #E86439, 1272px 1117px #FFF, 1364px 1831px #FFF, 668px 1228px #FFF, 388px 1234px #FFF, 776px 1969px #1ACDD1, 1615px 1121px #FFF, 1029px 429px #FF0266 , 1575px 91px #FF0266 , 1974px 896px #FFF, 1176px 758px #FFF, 1936px 1211px #FFF, 1802px 568px #FFF, 257px 1188px #FFF, 599px 1393px #FFF, 1145px 49px #FFF, 481px 1942px #FFF, 864px 981px #FFF, 1776px 1502px #FFF, 1962px 917px #FFF, 496px 56px #FFF, 1978px 748px #FFF, 878px 717px #FFF, 181px 508px #FFF, 1573px 424px #FFF, 747px 594px #FFF, 539px 1421px #FFF;
+}
+
+@keyframes animStar {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-2000px); }
+}
+
+/* Hide/remove old background layers so the new one is visible */
+#background-container, #background-gradient, .orb, #orb-1, #orb-2, #orb-3 {
+  display: none !important;
+}
+
+
+
+
+#usernameInput { font-size: 16px !important; }
+
+
+
+/* ===== Ownership: centering + width sanity (mobile-safe) ===== */
+html, body { overflow-x: hidden !important; }
+main#content { align-items: stretch !important; }
+
+#playerListView { 
+  width: 100% !important;
+  max-width: 700px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  box-sizing: border-box !important;
+}
+
+#playerSearch {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* vertical centering for row pieces */
+#playerListView .player-list-section .pl-player-row { align-items: center !important; }
+#playerListView .player-list-section .pl-player-row > .pl-list-tag,
+#playerListView .player-list-section .pl-player-row > .pl-player-info,
+#playerListView .player-list-section .pl-player-row > .pl-right-meta { align-self: center !important; }
+
+#playerListView .player-list-section .pl-list-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+/* keep right meta columns centered */
+#playerListView .player-list-section .pl-right-meta { align-items: center !important; }
+#playerListView .player-list-section .pl-col-count,
+#playerListView .player-list-section .pl-col-pct {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  height: 100%;
+}
+#playerListView .player-list-section .pl-col-lgs { line-height: 1.15 !important; }
+
+
+
+/* --- Install panel & Legend panel --- */
+.panel {
+  margin: 0.75rem auto;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 10px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.02), rgba(0,0,0,0.10));
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  backdrop-filter: blur(4px) saturate(110%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+  max-width: 720px;
+}
+
+.panel-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.install-details summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.install-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+@media (min-width: 720px) {
+  .install-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.install-card h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+}
+.install-card ol {
+  margin: 0 0 0.25rem 1.1rem;
+}
+.install-card .hint {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+}
+
+
+/* === Hotfix: Legend container and visibility === */
+#legend-section { 
+  display:block; 
+  width:100%; 
+  max-width: var(--welcome-width, 720px);
+  margin-left:auto; margin-right:auto;
+}
+.hidden { display:none; }
+
+/* Force-hide utility with higher precedence */
+.hidden{display:none !important;}
+#legend-section.hidden{display:none !important;}
+
+
+/* === CSS-only legend gating === */
+#legend-section { display:none !important; }               /* default hidden */
+#welcome-screen:not(.hidden) ~ #legend-section { 
+  display:block !important;                                /* show only when Welcome visible */
+}
+
+/* Paste at the very END of styles.css */
+/* === LEGEND CARD — INDIVIDUAL CONTROLS (no vars) === */
+                
+        /* ⬇︎↙️⬇︎⬇️⬇︎⏬️⬇︎🔽⬇︎⏬️⬇︎⬇️⬇︎↘️⬇︎ */
+
+#legend-section .panel-title{
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: .6px !important;
+  color: #EAEBF0 !important;
+}
+
+#rosterPlayerCardKey.legend-card { 
+    padding: 0.70rem .8rem !important; 
+    baackground-color: rgba(13, 14, 35, 0.21);
+       background-image: linear-gradient(rgba(255,255,255, 0.03), rgba(255,255,255, 0.03));
+        -webkit-backdrop-filter: blur(0px) saturate(120%) brightness(120%);
+        backdrop-filter: blur(6px) saturate(120%) brightness(120%);
+        box-shadow: inset 0 0 0 0px rgba(255,255,255, 0.05), inset 0 0 0 4px rgba(200,200,200, 0.025), 0 10px 26px rgba(0,0,0, var(--outerA, .22));
+        
+        /* Frame */
+        border: 1px solid rgba(128, 138, 189, 0.2);
+        border-radius: 10px;
+        box-shadow: rgba(255, 255, 255, 0.05) 0px 0px 0px 0px inset, rgba(200, 200, 200, 0.025) 0px 0px 0px 4px inset, rgba(0, 0, 0, 0.22) 0px 10px 26px 0px;
+}
+
+
+/* Top row */
+#rosterPlayerCardKey .player-tag.legend-pos{
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
+  color: #EAEBF0 !important;
+  padding: 0.4rem 0.55rem !important;   /* ← edit these to resize the POS chip */
+  border-radius: 6px !important;
+  line-height: 1.05 !important;
+  letter-spacing: .45px !important;
+}
+#rosterPlayerCardKey .legend-name{
+  font-size: 1.1rem !important;
+  font-weight: 400 !important;
+  letter-spacing: .1px !important;
+  color: #c6b3ff !important;
+    margin-left: 0.5rem
+}
+
+/* Row gaps */
+#rosterPlayerCardKey .legend-main{
+  display: flex !important;      /* keep layout */
+  align-items: center !important;
+  gap: 0.75rem !important;        /* POS ↔ Name gap (edit) */
+  margin-bottom: 0.9rem !important; /* gap to meta row (edit) */
+}
+
+/* Meta row */
+#rosterPlayerCardKey .legend-meta{
+  display: flex !important;
+  align-items: center !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: #9096C0 !important;
+  margin-bottom: 0.9rem !important; /* gap to bottom row (edit) */
+  line-height: 1.2 !important;
+}
+#rosterPlayerCardKey .legend-pos-rank{
+  color: #FF3A75CA !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  font-size: 0.8rem !important;
+  line-height: 1.2 !important;
+}
+#rosterPlayerCardKey .legend-age{
+  color: #766DFF !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  line-height: 1.2 !important;
+}
+/* If your separators are elements with .separator, control them here: */
+#rosterPlayerCardKey .legend-meta .separator{
+  color: #9096C0 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  line-height: 1 !important;
+}
+#rosterPlayerCardKey .legend-age {
+font-size: .95rem !important;
+font-weight: 500 !important;
+}
+/* Team chip (resize independent of POS chip) */
+#rosterPlayerCardKey .legend-team{
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
+  color: #EAEBF0 !important;
+  padding: 0.4rem 0.55rem !important;   /* ← edit these to resize the TEAM chip */
+  border-radius: 6px !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+/* Bottom row container (controls bar height via first padding value) */
+#rosterPlayerCardKey .legend-bottom-bg{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 0.85rem 0.85rem !important;   /* ← edit: vertical horizontal */
+  box-sizing: border-box !important;
+}
+
+/* Bottom row labels and values */
+#rosterPlayerCardKey .kv-right{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;               /* label ↔ value gap (edit) */
+  color: #9096C0 !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px !important;
+}
+#rosterPlayerCardKey .kv-left{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  color: #9096C0 !important;
+  font-weight: 700 !important;
+  letter-spacing: .2px !important;
+  font-size: 1rem !important;            /* explicit since base didn’t define it */
+}
+#rosterPlayerCardKey .kv-left .value,
+#rosterPlayerCardKey .kv-right .value{
+  font-size: 1rem !important;            /* numeric size (edit) */
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+}
+#rosterPlayerCardKey .legend-ktc{ color: #00EBC7 !important; }
+#rosterPlayerCardKey .legend-adp{ color: #58A7FF !important; }
+
+/* Footnote */
+#rosterCardFootnote.legend-footnote{
+  font-size: 0.74rem !important;
+  color: #5F6795 !important;
+}
+
+/* === Welcome-only logo + padding (surgical) === */
+#welcome-screen { padding-top: 0.3rem !important; padding-bottom: 0.25rem !important; }
+#welcome-screen h1, #welcome-screen h2, #welcome-screen h3 { margin-bottom: 0.05rem !important; }
+
+#welcome-screen .welcome-logo {
+  display:block; margin:0 auto 0.0rem; width:clamp(72px,18vw,128px); height:auto;
+  position:relative; z-index:0; filter:drop-shadow(0 8px 22px rgba(0,0,0,.35));
+}
+#welcome-screen .welcome-logo img {
+  display:block; width:100%; height:auto; position:relative; z-index:1;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 80%);
+          mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,1) 62%, rgba(0,0,0,0) 80%);
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+}
+#welcome-screen .welcome-logo::after {
+  content:""; position:absolute; inset:-4px; border-radius:14px; pointer-events:none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.0) 45%, rgba(0,0,0,0.06) 75%, rgba(0,0,0,0.10) 92%, rgba(0,0,0,0) 100%);
+  filter:blur(4px); z-index:0;
+}
+
+/* Welcome logo gradient glow (safe, no size changes) */
+#welcome-screen .welcome-logo { position: relative; }
+#welcome-screen .welcome-logo img { position: relative; z-index: 1; }
+#welcome-screen .welcome-logo::before {
+  content: "";
+  position: absolute;
+  top: 53%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 165%; height: 90%;
+  background: radial-gradient(circle at 50% 50%, #5300FF40 0%, #5500ff20 30% ,#5500ff08 70%, transparent 90%);
+  filter: blur(10px);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Keep footnote centered space without making the container larger */
+
+
+/* Equalize space above/below the footnote so it sits between the install panel and card bottom */
+.install-footnote {
+  margin: 0.25rem 0 0.25rem 0 !important; /* equal margins, small total */
+}
+
+/* Center the footnote between the collapsed install panel and the bottom of the card */
+.install-footnote {
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--color-text-tertiary, #5F6795);
+  margin-top: 0.42rem;
+  margin-bottom: 0.42rem;
+  line-height: 1.1;
+}
+
+/* --- Menu Button and Dropdown --- */
+.menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-button svg {
+    fill: var(--color-text-secondary);
+}
+
+.menu-button:hover svg {
+    fill: var(--color-text-primary);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-panel-border);
+    border-radius: var(--card-border-radius);
+    padding: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    z-index: 20;
+    min-width: 150px;
+}
+
+.dropdown-menu a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--card-border-radius);
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--color-panel-bg);
+    color: var(--color-text-primary);
+}
+
+.dropdown-menu.hidden {
+    display: none;
+}
+
+/* Adjust username area width */
+.username-area {
+    max-width: 120px;
+}
