@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleeper League Infographic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="starfield"></div>
+    <div id="noise-overlay"></div>
+
+    <div class="content-wrapper">
+        <header class="app-header glass-panel">
+            <div class="header-row">
+                <div class="username-area">
+                    <input type="text" id="usernameInput" placeholder="Sleeper Username..." value="The_Oracle">
+                </div>
+                <div class="custom-select-wrapper">
+                    <select id="leagueSelect" disabled>
+                        <option>Enter Username First</option>
+                    </select>
+                </div>
+                <button id="fetchButton" class="control-button">Analyze League</button>
+            </div>
+        </header>
+
+        <main id="content" class="container">
+            <div id="loading" class="hidden">
+                <div class="spinner"></div>
+                <p>Loading League Data...</p>
+            </div>
+
+            <div id="welcome-screen">
+                <h2>Advanced League Analysis</h2>
+                <p>Enter a Sleeper username to generate your league's infographic.</p>
+            </div>
+
+            <div id="infographic-container" class="hidden">
+                <section id="team-comparison-section" class="infographic-section">
+                    <div id="team-tiers-container" class="glass-panel">
+                        <!-- Team Tiers will be populated here -->
+                    </div>
+                    <div class="charts-container glass-panel">
+                        <div class="chart-wrapper">
+                            <h3>Overall Team Value</h3>
+                            <canvas id="totalValueChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h3>Starting Lineup Value</h3>
+                            <canvas id="starterValueChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="positional-analysis-section" class="infographic-section">
+                    <div class="section-header">
+                        <h2>Positional Breakdown</h2>
+                        <div class="toggle-switch">
+                            <span>Value</span>
+                            <label class="switch">
+                                <input type="checkbox" id="viewToggle">
+                                <span class="slider round"></span>
+                            </label>
+                            <span>Rank</span>
+                        </div>
+                    </div>
+                    <div id="positional-ranks-container">
+                        <!-- Positional rank cards will be populated here -->
+                    </div>
+                </section>
+
+                <section id="team-dna-section" class="infographic-section">
+                     <div class="section-header">
+                        <h2>Team DNA</h2>
+                    </div>
+                    <div id="team-dna-container">
+                        <!-- Radar charts will be populated here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
