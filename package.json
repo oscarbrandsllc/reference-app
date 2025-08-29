@@ -1,0 +1,8 @@
+{
+  "name": "reference-app",
+  "version": "1.0.0",
+  "description": "Reference app with league infographic",
+  "scripts": {
+    "test": "npx --yes prettier --check infographic/app.js infographic/index.html infographic/styles.css && npx --yes htmlhint infographic/index.html && node --check infographic/app.js"
+  }
+}

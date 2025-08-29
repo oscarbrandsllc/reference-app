@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>League Value Infographic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  </head>
+  <body>
+    <div id="loading" class="hidden"><div class="spinner"></div></div>
+    <header>
+      <h1>League Value Infographic</h1>
+      <div class="controls">
+        <input id="username" type="text" placeholder="Sleeper username" />
+        <button id="loadBtn">Load Leagues</button>
+        <select id="leagueSelect" class="hidden"></select>
+      </div>
+    </header>
+    <main>
+      <section id="charts" class="hidden">
+        <div class="chart-card">
+          <button class="dl-btn" data-chart="startersChart">Save PNG</button>
+          <h2>Starter Value by Team</h2>
+          <canvas id="startersChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <button class="dl-btn" data-chart="totalChart">Save PNG</button>
+          <h2>Total Roster Value by Position</h2>
+          <canvas id="totalChart"></canvas>
+        </div>
+      </section>
+      <section id="teamDetail" class="hidden">
+        <div class="chart-card">
+          <button class="dl-btn" data-chart="teamChart">Save PNG</button>
+          <h2 id="teamDetailName">Team Breakdown</h2>
+          <canvas id="teamChart"></canvas>
+          <p id="teamSummary"></p>
+        </div>
+      </section>
+      <section id="slotTableSection" class="hidden">
+        <h2>Starting Lineup Rankings</h2>
+        <div class="table-wrapper">
+          <table id="slotTable"></table>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
