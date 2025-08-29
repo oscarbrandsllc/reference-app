@@ -1,0 +1,97 @@
+:root {
+  --font-sans: 'Quicksand', sans-serif;
+  --color-bg: #0D0E1B;
+  --color-text: #EAEBF0;
+  --color-accent-primary: #766DFF;
+  --color-accent-secondary: #42C2FF;
+  --pos-qb: #FF3A75;
+  --pos-rb: #00EBC7;
+  --pos-wr: #58A7FF;
+  --pos-te: #B469FF;
+  --pos-pick: #cccccc;
+}
+
+body {
+  background: radial-gradient(circle at top, #1b1c3b, var(--color-bg));
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0 1rem;
+}
+
+header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.controls {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#charts {
+  margin-top: 2rem;
+}
+
+section {
+  background: #1e1f30;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+h2 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.slot-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+canvas {
+  max-width: 100%;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+#slotTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+#slotTable th,
+#slotTable td {
+  border: 1px solid #333;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+#slotTable th {
+  background: #1e1f30;
+}
+
+.highlight {
+  background-color: rgba(118,109,255,0.3);
+}
+
+.rank {
+  font-size: 0.75rem;
+  color: var(--color-accent-secondary);
+}
+
+.hidden { display: none; }
