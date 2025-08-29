@@ -1,0 +1,8 @@
+{
+  "name": "reference-app",
+  "version": "1.0.0",
+  "description": "Reference app with league infographic",
+  "scripts": {
+    "test": "echo 'No test suite defined'"
+  }
+}
